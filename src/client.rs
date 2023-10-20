@@ -36,8 +36,9 @@ impl SplitterClient {
         let result = self.inner_split_video(id.clone()).await;
 
         match result {
-            Ok(_) => {
+            Ok(count) => {
                 video.status = ActiveValue::Set(Status::Split);
+                video.part_count = ActiveValue::Set(count as i32);
                 video.clone().update(&self.db).await?;
             }
             Err(err) => {
@@ -48,7 +49,7 @@ impl SplitterClient {
         }
         Ok(())
     }
-    async fn inner_split_video(&self, id: String) -> Result<()> {
+    async fn inner_split_video(&self, id: String) -> Result<usize> {
         let base_path = Path::new(&self.conf.download_folder_path);
         let input_path = base_path.join(format!("{}.mp4", id));
         let output_folder_path = base_path.join(&id);
@@ -109,7 +110,7 @@ impl SplitterClient {
         let duration = Instant::now().duration_since(start_time);
         info!("Done Splitting. Whole operation took: {:?}", duration);
         debug!("paths: {:?}", paths);
-        Ok(())
+        Ok(paths.len())
     }
 
     #[tracing::instrument(skip(self))]
