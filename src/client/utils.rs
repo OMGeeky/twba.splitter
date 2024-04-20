@@ -1,3 +1,4 @@
+use crate::client::utils::ffmpeg::run_ffmpeg_concat;
 use crate::errors::SplitterError;
 use crate::prelude::*;
 use anyhow::Context;

@@ -1,9 +1,9 @@
 use crate::errors::SplitterError;
 use crate::prelude::*;
-use backup_config::Conf;
+use twba_backup_config::Conf;
 use chrono::Duration;
-use local_db::prelude::{Status, Videos, VideosColumn, VideosModel};
-use local_db::re_exports::sea_orm::{
+use twba_local_db::prelude::{Status, Videos, VideosColumn, VideosModel};
+use twba_local_db::re_exports::sea_orm::{
     ActiveModelTrait, ActiveValue, ColumnTrait, DatabaseConnection, EntityTrait, IntoActiveModel,
     QueryFilter,
 };

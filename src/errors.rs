@@ -7,7 +7,7 @@ pub enum SplitterError {
     LoadConfig(#[source] anyhow::Error),
 
     #[error("Some error with the database")]
-    OpenDatabase(#[from] local_db::re_exports::sea_orm::DbErr),
+    OpenDatabase(#[from] twba_local_db::re_exports::sea_orm::DbErr),
 
     #[error("File or Folder not found or invalid: {0:?}")]
     NotFound(PathBuf),
