@@ -150,7 +150,7 @@ pub(crate) async fn get_playlist_info(playlist_path: &PathBuf) -> Result<Playlis
             total_duration = total_duration + duration;
         } else if line.starts_with("#EXT-X-ENDLIST") {
             break;
-        } else if lines.starts_with("#EXT") {
+        } else if line.starts_with("#EXT") {
             trace!("unknown line in playlist: {}", line);
             continue;
         } else if let Some(duration) = last_duration {

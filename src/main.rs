@@ -11,7 +11,7 @@ async fn main() -> Result<()> {
     tracing_subscriber::fmt()
         .with_max_level(tracing::Level::INFO)
         .with_env_filter(
-            "sea_orm=warn,sea_orm_migration=warn,sqlx=warn,splitter=trace,twba_local_db=warn,other=warn",
+            "sea_orm=warn,sea_orm_migration=warn,sqlx=warn,twba_splitter=trace,twba_local_db=warn,other=warn",
         )
         .init();
     info!("Hello, world!");

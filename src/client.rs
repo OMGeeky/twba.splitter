@@ -37,11 +37,13 @@ impl SplitterClient {
 
         match result {
             Ok(count) => {
+                info!("Split video with id: {} into {} parts", id, count);
                 video.status = ActiveValue::Set(Status::Split);
                 video.part_count = ActiveValue::Set(count as i32);
                 video.clone().update(&self.db).await?;
             }
             Err(err) => {
+                error!("Could not split video with id: {} because of err: {:?}", id, err);
                 video.status = ActiveValue::Set(Status::SplitFailed);
                 video.clone().update(&self.db).await?;
                 return Err(err);
