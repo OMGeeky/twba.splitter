@@ -29,7 +29,7 @@ impl SplitterClient {
     #[tracing::instrument(skip(self))]
     async fn split_video(&self, video: VideosModel) -> Result<()> {
         //
-        let id = video.twitch_id.clone();
+        let id = video.id.to_string();
         let mut video = video.into_active_model();
         video.status = ActiveValue::Set(Status::Splitting);
         video.clone().update(&self.db).await?;
