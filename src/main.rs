@@ -1,7 +1,7 @@
 use crate::errors::SplitterError;
+use prelude::*;
 use twba_backup_config::prelude::Config;
 use twba_backup_config::Conf;
-use prelude::*;
 
 pub mod client;
 pub mod errors;
@@ -26,6 +26,7 @@ async fn run() -> Result<()> {
         .env()
         .file("./settings.toml")
         .file(shellexpand::tilde("~/twba/config.toml").into_owned())
+        .file(std::env::var("TWBA_CONFIG").unwrap_or_else(|_| "~/twba/config.toml".to_string()))
         .load()
         .map_err(|e| SplitterError::LoadConfig(e.into()))?;
 
