@@ -1,15 +1,15 @@
 use crate::errors::SplitterError;
 use crate::prelude::*;
-use twba_backup_config::Conf;
 use chrono::Duration;
-use twba_local_db::prelude::{Status, Videos, VideosColumn, VideosModel};
-use twba_local_db::re_exports::sea_orm::{
-    ActiveModelTrait, ActiveValue, ColumnTrait, DatabaseConnection, EntityTrait, IntoActiveModel,
-    QueryFilter,
-};
 use std::path::{Path, PathBuf};
 use std::time::Instant;
 use tokio::fs;
+use twba_backup_config::Conf;
+use twba_local_db::prelude::{Status, Videos, VideosColumn, VideosModel};
+use twba_local_db::re_exports::sea_orm::{
+    ActiveModelTrait, ActiveValue, ColumnTrait, DatabaseConnection, EntityTrait, IntoActiveModel,
+    QueryFilter, QuerySelect,
+};
 
 mod utils;
 use utils::ffmpeg::run_ffmpeg_split;
@@ -43,7 +43,10 @@ impl SplitterClient {
                 video.clone().update(&self.db).await?;
             }
             Err(err) => {
-                error!("Could not split video with id: {} because of err: {:?}", id, err);
+                error!(
+                    "Could not split video with id: {} because of err: {:?}",
+                    id, err
+                );
                 video.status = ActiveValue::Set(Status::SplitFailed);
                 video.clone().update(&self.db).await?;
                 return Err(err);
@@ -120,6 +123,7 @@ impl SplitterClient {
         info!("Splitting videos");
         let videos = Videos::find()
             .filter(VideosColumn::Status.eq(Status::Downloaded))
+            .limit(self.conf.max_items_to_process)
             .all(&self.db)
             .await?;
 

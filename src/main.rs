@@ -8,12 +8,7 @@ pub mod errors;
 pub mod prelude;
 #[tokio::main]
 async fn main() -> Result<()> {
-    tracing_subscriber::fmt()
-        .with_max_level(tracing::Level::INFO)
-        .with_env_filter(
-            "sea_orm=warn,sea_orm_migration=warn,sqlx=warn,twba_splitter=trace,twba_local_db=warn,other=warn",
-        )
-        .init();
+    let _guard = twba_common::init_tracing("twba_splitter");
     info!("Hello, world!");
 
     run().await?;
@@ -22,11 +17,7 @@ async fn main() -> Result<()> {
     Ok(())
 }
 async fn run() -> Result<()> {
-    let conf = Conf::builder()
-        .env()
-        .file("./settings.toml")
-        .file(shellexpand::tilde("~/twba/config.toml").into_owned())
-        .file(std::env::var("TWBA_CONFIG").unwrap_or_else(|_| "~/twba/config.toml".to_string()))
+    let conf = twba_backup_config::get_default_builder()
         .load()
         .map_err(|e| SplitterError::LoadConfig(e.into()))?;
 
