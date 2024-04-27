@@ -33,7 +33,7 @@ impl SplitterClient {
         let mut video = video.into_active_model();
         video.status = ActiveValue::Set(Status::Splitting);
         video.clone().update(&self.db).await?;
-        let result = self.inner_split_video(id.clone()).await;
+        let result = self.inner_split_video(&id).await;
 
         match result {
             Ok(count) => {
@@ -54,7 +54,7 @@ impl SplitterClient {
         }
         Ok(())
     }
-    async fn inner_split_video(&self, id: String) -> Result<usize> {
+    async fn inner_split_video(&self, id: &str) -> Result<usize> {
         let base_path = Path::new(&self.conf.download_folder_path);
         let input_path = base_path.join(format!("{}.mp4", id));
         let output_folder_path = base_path.join(&id);
