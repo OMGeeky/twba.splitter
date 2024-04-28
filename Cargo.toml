@@ -1,6 +1,6 @@
 [package]
 name = "twba-splitter"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
@@ -8,7 +8,7 @@ edition = "2021"
 [dependencies]
 twba-backup-config = { version = "0.1", git = "https://github.com/OMGeeky/backup_config.git" }
 twba-local-db = { version = "0.2", git = "https://github.com/OMGeeky/twitch_backup.local_db.git" }
-twba-common = { version = "0.1", git = "https://github.com/OMGeeky/twba.common.git" }
+twba-common = { version = "0.2", git = "https://github.com/OMGeeky/twba.common.git" }
 
 tokio = "1.33"
 tracing = "0.1"
