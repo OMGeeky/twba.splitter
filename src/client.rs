@@ -57,7 +57,7 @@ impl SplitterClient {
     async fn inner_split_video(&self, id: &str) -> Result<usize> {
         let base_path = Path::new(&self.conf.download_folder_path);
         let input_path = base_path.join(format!("{}.mp4", id));
-        let output_folder_path = base_path.join(&id);
+        let output_folder_path = base_path.join(id);
 
         info!("Splitting video with id: {}", id);
         verify_paths(base_path, &input_path, &output_folder_path).await?;

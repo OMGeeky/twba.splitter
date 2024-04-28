@@ -1,7 +1,5 @@
 use crate::errors::SplitterError;
 use prelude::*;
-use twba_backup_config::prelude::Config;
-use twba_backup_config::Conf;
 
 pub mod client;
 pub mod errors;

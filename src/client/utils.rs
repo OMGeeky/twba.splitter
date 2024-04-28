@@ -67,7 +67,7 @@ async fn join_last_two_parts(input_parts: &mut PlaylistInfo, base_folder: &Path)
         .parts
         .last_mut()
         .ok_or(SplitterError::JoinRequiresAtLeastTwoParts)?;
-    second_last_part.duration = second_last_part.duration + last_part.duration;
+    second_last_part.duration += last_part.duration;
     let second_last_part_path = combine_path_as_string(base_folder, &second_last_part.path)?;
     let last_part_path = combine_path_as_string(base_folder, &last_part.path)?;
     let join_txt_path = base_folder
@@ -147,7 +147,7 @@ pub(crate) async fn get_playlist_info(playlist_path: &PathBuf) -> Result<Playlis
                         .map_err(SplitterError::PlaylistParse)?) as u64 as i64,
             );
             last_duration = Some(duration);
-            total_duration = total_duration + duration;
+            total_duration += duration;
         } else if line.starts_with("#EXT-X-ENDLIST") {
             break;
         } else if line.starts_with("#EXT") {
