@@ -97,7 +97,7 @@ impl SplitterClient {
         let split_info = utils::get_playlist_info(&split_playlist_path).await?;
         tokio::fs::remove_file(&split_playlist_path)
             .await
-            .map_err(SplitterError::Write)?;
+            .map_err(|e| SplitterError::Write(split_playlist_path.clone(), e))?;
         trace!(
             "total duration: {} in {} parts",
             split_info.total_duration.to_string(),
@@ -110,7 +110,7 @@ impl SplitterClient {
         debug!("removing original file: {:?}", input_path);
         tokio::fs::remove_file(&input_path)
             .await
-            .map_err(SplitterError::Write)?;
+            .map_err(|e| SplitterError::Write(input_path.clone(), e))?;
 
         let duration = Instant::now().duration_since(start_time);
         info!("Done Splitting. Whole operation took: {:?}", duration);
