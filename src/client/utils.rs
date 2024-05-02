@@ -70,14 +70,8 @@ async fn join_last_two_parts(input_parts: &mut PlaylistInfo, base_folder: &Path)
     second_last_part.duration += last_part.duration;
     let second_last_part_path = combine_path_as_string(base_folder, &second_last_part.path)?;
     let last_part_path = combine_path_as_string(base_folder, &last_part.path)?;
-    let join_txt_path = base_folder
-        .join("join.txt")
-        .canonicalize()
-        .map_err(SplitterError::Canonicalize)?;
-    let join_out_tmp_path = base_folder
-        .join("join_out_tmp.mp4")
-        .canonicalize()
-        .map_err(SplitterError::Canonicalize)?;
+    let join_txt_path = base_folder.join("join.txt");
+    let join_out_tmp_path = base_folder.join("join_out_tmp.mp4");
     tokio::fs::write(
         &join_txt_path,
         format!(
