@@ -25,7 +25,10 @@ pub fn duration_to_string(duration: &Duration) -> String {
     let seconds = seconds % 60;
     format!("{:02}:{:02}:{:02}", hours, minutes, seconds)
 }
-#[instrument(skip(input_parts), fields(input_parts_amount = input_parts.parts.len(), total_duration = input_parts.total_duration.num_seconds()))]
+#[instrument(skip(input_parts, duration_cap),
+    fields(input_parts_amount = input_parts.parts.len(),
+        total_duration = input_parts.total_duration.num_seconds(),
+        duration_cap = duration_cap.num_seconds()))]
 pub(super) async fn join_last_parts_if_needed(
     mut input_parts: PlaylistInfo,
     base_folder: &Path,
