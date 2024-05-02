@@ -26,7 +26,7 @@ impl SplitterClient {
 }
 
 impl SplitterClient {
-    #[tracing::instrument(skip(self))]
+    #[tracing::instrument(skip(self, video), fields(video_id = video.id))]
     async fn split_video(&self, video: VideosModel) -> Result<()> {
         //
         let id = video.id.to_string();

@@ -1,5 +1,6 @@
 use super::*;
-
+use tracing::instrument;
+#[instrument(skip(join_txt_path, join_out_path))]
 pub(crate) async fn run_ffmpeg_concat(
     join_txt_path: impl Into<String>,
     join_out_path: impl Into<String>,
@@ -29,7 +30,7 @@ pub(crate) async fn run_ffmpeg_concat(
     debug!("Finished running ffmpeg command");
     Ok(())
 }
-
+#[instrument(skip(input, target_duration, output_playlist, output_pattern))]
 pub(crate) async fn run_ffmpeg_split(
     input: &Path,
     output_pattern: &String,

@@ -5,6 +5,7 @@ use anyhow::Context;
 use chrono::Duration;
 use std::path::{Path, PathBuf};
 use tokio::process::Command;
+use tracing::instrument;
 
 /// Converts a duration to a string that is usable for example in an ffmpeg command
 ///
@@ -24,7 +25,7 @@ pub fn duration_to_string(duration: &Duration) -> String {
     let seconds = seconds % 60;
     format!("{:02}:{:02}:{:02}", hours, minutes, seconds)
 }
-
+#[instrument(skip(input_parts), fields(input_parts_amount = input_parts.parts.len(), total_duration = input_parts.total_duration.num_seconds()))]
 pub(super) async fn join_last_parts_if_needed(
     mut input_parts: PlaylistInfo,
     base_folder: &Path,
