@@ -95,9 +95,7 @@ impl SplitterClient {
         let duration = Instant::now().duration_since(start_time);
         info!("FFMPEG-Splitting took: {:?}", duration);
         let split_info = utils::get_playlist_info(&split_playlist_path).await?;
-        tokio::fs::remove_file(&split_playlist_path)
-            .await
-            .map_err(|e| SplitterError::Write(split_playlist_path.clone(), e))?;
+        Self::remove_file(&split_playlist_path).await?;
         trace!(
             "total duration: {} in {} parts",
             split_info.total_duration.to_string(),
@@ -108,14 +106,19 @@ impl SplitterClient {
                 .await?;
 
         debug!("removing original file: {:?}", input_path);
-        tokio::fs::remove_file(&input_path)
-            .await
-            .map_err(|e| SplitterError::Write(input_path.clone(), e))?;
+        Self::remove_file(&input_path).await?;
 
         let duration = Instant::now().duration_since(start_time);
         info!("Done Splitting. Whole operation took: {:?}", duration);
         debug!("paths: {:?}", paths);
         Ok(paths.len())
+    }
+
+    async fn remove_file(input_path: &PathBuf) -> Result<()> {
+        tokio::fs::remove_file(&input_path).await.map_err(|e| {
+            SplitterError::Write(input_path.to_str().unwrap_or("invalid path").to_string(), e)
+        })?;
+        Ok(())
     }
 
     #[tracing::instrument(skip(self))]

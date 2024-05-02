@@ -75,6 +75,10 @@ async fn join_last_two_parts(input_parts: &mut PlaylistInfo, base_folder: &Path)
     let second_last_part_path = combine_path_as_string(base_folder, &second_last_part.path)?;
     let last_part_path = combine_path_as_string(base_folder, &last_part.path)?;
     let join_txt_path = base_folder.join("join.txt");
+    let join_txt_path_string = join_txt_path
+        .to_str()
+        .unwrap_or("could not parse to string")
+        .to_string();
     let join_out_tmp_path = base_folder.join("join_out_tmp.mp4");
     tokio::fs::write(
         &join_txt_path,
@@ -84,7 +88,7 @@ async fn join_last_two_parts(input_parts: &mut PlaylistInfo, base_folder: &Path)
         ),
     )
     .await
-    .map_err(|e| SplitterError::Write(join_txt_path.clone(), e))?;
+    .map_err(|e| SplitterError::Write(join_txt_path_string.clone(), e))?;
 
     run_ffmpeg_concat(
         join_txt_path
@@ -99,27 +103,27 @@ async fn join_last_two_parts(input_parts: &mut PlaylistInfo, base_folder: &Path)
     .await?;
     debug!(
         "removing files: {:?}, {:?}, {:?}",
-        second_last_part.path, last_part.path, join_txt_path
+        second_last_part_path, last_part_path, join_txt_path
     );
-    trace!("removing file: {:?}", last_part.path);
-    tokio::fs::remove_file(&last_part.path)
+    trace!("removing file: {:?}", last_part_path);
+    tokio::fs::remove_file(&last_part_path)
         .await
-        .map_err(|e| SplitterError::Write(last_part.path, e))?;
-    trace!("removing file: {:?}", second_last_part.path);
-    tokio::fs::remove_file(&second_last_part.path)
+        .map_err(|e| SplitterError::Write(last_part_path, e))?;
+    trace!("removing file: {:?}", second_last_part_path);
+    tokio::fs::remove_file(&second_last_part_path)
         .await
-        .map_err(|e| SplitterError::Write(second_last_part.path.clone(), e))?;
+        .map_err(|e| SplitterError::Write(second_last_part_path.clone(), e))?;
     trace!("removing file: {:?}", join_txt_path);
     tokio::fs::remove_file(&join_txt_path)
         .await
-        .map_err(|e| SplitterError::Write(join_txt_path.clone(), e))?;
+        .map_err(|e| SplitterError::Write(join_txt_path_string, e))?;
     debug!(
         "renaming file: {:?} to {:?}",
-        join_out_tmp_path, second_last_part.path
+        join_out_tmp_path, second_last_part_path
     );
-    tokio::fs::rename(join_out_tmp_path, &second_last_part.path)
+    tokio::fs::rename(join_out_tmp_path, &second_last_part_path)
         .await
-        .map_err(|e| SplitterError::Write(second_last_part.path.clone(), e))?;
+        .map_err(|e| SplitterError::Write(second_last_part_path, e))?;
     debug!("joined last two parts together");
     Ok(())
 }

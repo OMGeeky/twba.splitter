@@ -19,7 +19,7 @@ pub enum SplitterError {
     #[error("Could not read from filesystem: {0:?}")]
     Read(#[source] io::Error),
     #[error("Could not write to filesystem: {0:?}")]
-    Write(PathBuf, #[source] io::Error),
+    Write(String, #[source] io::Error),
 
     #[error("Path could not be canonicalized: {0:?}")]
     Canonicalize(#[source] io::Error),
